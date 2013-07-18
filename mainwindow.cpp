@@ -118,8 +118,8 @@ void MainWindow::drawWavelet()
     for (; itRects != endRects; ++itRects, ++itWeights)
     {
         cv::Rect r = *itRects;
-        cv::Point p1(r.x * 10 + 1            , r.y * 10 + 1);
-        cv::Point p2((r.x + r.width) * 10 + 1, (r.y + r.height) * 10 + 1);
+        cv::Point p1(r.x * PIXEL_VIEW_SIZE + WAVELET_PADDING/2            , r.y * PIXEL_VIEW_SIZE + WAVELET_PADDING/2);
+        cv::Point p2((r.x + r.width) * PIXEL_VIEW_SIZE + WAVELET_PADDING/2, (r.y + r.height) * PIXEL_VIEW_SIZE + WAVELET_PADDING/2);
 
         if (*itWeights > 0)
         {
