@@ -44,16 +44,13 @@ void MainWindow::openFile()
     cv::Point position(0,0); //always like that during SRFS production
     cv::Size sampleSize(SAMPLE_SIZE, SAMPLE_SIZE); //size in pixels of the trainning images
 
-    cv::FileStorage waveletStorage(filepath.toAscii().constData(), cv::FileStorage::READ);
-    cv::FileNode wavelets = waveletStorage.root();
-    cv::FileNodeIterator it = wavelets.begin();
-    const cv::FileNodeIterator end = wavelets.end();
+    std::ifstream ifs;
+    ifs.open(filepath.toAscii().constData(), std::ifstream::in);
 
     int waveletIndex = 0;
-    for(;it != end; ++it)
+    while(!ifs.eof())
     {
-        HaarWavelet * wavelet = new HaarWavelet(&sampleSize, &position, *it);
-
+        HaarWavelet * wavelet = new HaarWavelet(&sampleSize, &position, ifs);
         loadedWavelets.push_back(wavelet);//real data (is it necessary?)
 
         //list model
@@ -62,6 +59,8 @@ void MainWindow::openFile()
 
         waveletIndex++;
     }
+
+    ifs.close();
 
     listLoaded = true;
 

@@ -2,13 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-#include <vector>
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-
 #include <QModelIndex>
 #include <QModelIndexList>
+
+#include <vector>
+#include <iostream>
+#include <string>
+#include <fstream>
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 class HaarWavelet;
 class QListWidgetItem;
