@@ -38,8 +38,8 @@ private:
 
     Ui::MainWindow *ui;
 
-    const cv::Point position; //always like that during SRFS production
-    const cv::Size sampleSize; //size in pixels of the trainning images
+    cv::Point position; //always like that during SRFS production
+    cv::Size sampleSize; //size in pixels of the trainning images
     const cv::Scalar white;
     const cv::Scalar black;
     const cv::Mat cleanView;

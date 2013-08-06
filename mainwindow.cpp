@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <sstream>
+
 #include <QString>
 #include <QFileDialog>
 #include <QImage>
@@ -36,13 +38,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::openFile()
 {
-    //TODO reset all states
+    QFileDialog dialog(this, tr("Choose haar wavelet file to open"));
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    if(!dialog.exec()) {
+        return;
+    }
 
-    QString filepath = QFileDialog::getOpenFileName(
-                this, tr("Choose haar wavelet file to open"));
+    closeFile(); //ensures that the old file is closed prior to opening another one
 
-    cv::Point position(0,0); //always like that during SRFS production
-    cv::Size sampleSize(SAMPLE_SIZE, SAMPLE_SIZE); //size in pixels of the trainning images
+
+
+    QStringList files = dialog.selectedFiles();
+    QString filepath = files[0];
 
     std::ifstream ifs;
     ifs.open(filepath.toAscii().constData(), std::ifstream::in);
@@ -53,8 +61,11 @@ void MainWindow::openFile()
         HaarWavelet * wavelet = new HaarWavelet(&sampleSize, &position, ifs);
         loadedWavelets.push_back(wavelet);//real data (is it necessary?)
 
+        std::stringstream ss;
+        wavelet->write(ss);
+
         //list model
-        QListWidgetItem * item = new QListWidgetItem(QString::number(waveletIndex), ui->waveletList);
+        QListWidgetItem * item = new QListWidgetItem(ss.str().c_str(), ui->waveletList);
         item->setData(Qt::UserRole, waveletIndex);
 
         waveletIndex++;
@@ -78,18 +89,18 @@ void MainWindow::openFile()
 
 void MainWindow::closeFile()
 {
-    while(!loadedWavelets.empty())
-    {
-        delete loadedWavelets.back();
-        loadedWavelets.pop_back();
-    }
-
-    loadedWavelets.clear();
-
     listLoaded = false;
     selectedImageIndex = -1;
 
-    //TODO clean the list
+    std::vector<HaarWavelet *>::iterator it = loadedWavelets.begin();
+    const std::vector<HaarWavelet *>::iterator end = loadedWavelets.end();
+    for(; it != end; ++it) {
+        HaarWavelet * h = *it;
+        delete h;
+    }
+
+    loadedWavelets.clear();
+    ui->waveletList->clear();
 }
 
 void MainWindow::waveletSelected(QListWidgetItem *item, QListWidgetItem *)
@@ -112,7 +123,6 @@ void MainWindow::drawWavelet()
     std::vector<cv::Rect>::const_iterator itRects = wavelet->rects_begin();
     const std::vector<cv::Rect>::const_iterator endRects = wavelet->rects_end();
     std::vector<float>::const_iterator itWeights = wavelet->weights_begin();
-    //const std::vector<float>::const_iterator endWeights = wavelet.weights_end();
 
     for (; itRects != endRects; ++itRects, ++itWeights)
     {
@@ -136,6 +146,5 @@ void MainWindow::drawWavelet()
                            image.step,
                            QImage::Format_RGB888);
     ui->waveletImage->setPixmap(QPixmap::fromImage(qImage));
-    //ui->waveletImage->resize(ui->waveletImage->pixmap()->size());
     ui->waveletImage->update();
 }
