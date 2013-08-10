@@ -10,6 +10,7 @@
 
 
 #include "../ecrsgen/lib/haarwavelet.h"
+#include "../ecrsgen/lib/haarwaveletutilities.h"
 
 #define PIXEL_VIEW_SIZE 15
 #define WAVELET_PADDING 2
@@ -52,35 +53,28 @@ void MainWindow::openFile()
     QStringList files = dialog.selectedFiles();
     QString filepath = files[0];
 
-    std::ifstream ifs;
-    ifs.open(filepath.toAscii().constData(), std::ifstream::in);
+
 
     int waveletIndex = 0;
-    while(!ifs.eof())
+    loadHaarWavelets(&sampleSize, &position, filepath.toAscii().constData(), loadedWavelets);
+    for (std::vector<HaarWavelet *>::const_iterator it = loadedWavelets.begin(); it != loadedWavelets.end(); ++it)
     {
-        HaarWavelet * wavelet = new HaarWavelet(&sampleSize, &position, ifs);
-        loadedWavelets.push_back(wavelet);//real data (is it necessary?)
-
         std::stringstream ss;
-        wavelet->write(ss);
+        (*it)->write(ss);
 
-        //list model
+        //setting the view on the screen
         QListWidgetItem * item = new QListWidgetItem(ss.str().c_str(), ui->waveletList);
         item->setData(Qt::UserRole, waveletIndex);
-
-        waveletIndex++;
     }
-
-    ifs.close();
-
     listLoaded = true;
+
 
     {
         QString message;
         message.append("Opened file ");
         message.append(filepath);
         message.append(". Loaded ");
-        message.append(QString::number(waveletIndex));
+        message.append(QString::number(loadedWavelets.size()));
         message.append(" haar wavelets.");
 
         ui->statusBar->showMessage(message);
