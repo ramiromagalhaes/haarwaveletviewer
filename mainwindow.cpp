@@ -56,7 +56,7 @@ void MainWindow::openFile()
 
 
     int waveletIndex = 0;
-    loadHaarWavelets(&sampleSize, &position, filepath.toAscii().constData(), loadedWavelets);
+    loadHaarWavelets(&sampleSize, filepath.toAscii().constData(), loadedWavelets);
     for (std::vector<HaarWavelet *>::const_iterator it = loadedWavelets.begin(); it != loadedWavelets.end(); ++it)
     {
         std::stringstream ss;
