@@ -19,5 +19,5 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-LIBS += -L/home/ramiro/workspace/build-ecrsgen-Debug/ -lhaarwavelet -lopencv_core -lopencv_imgproc -lopencv_highgui
+LIBS += -L/home/ramiro/workspace/ecrsgen-build-Release/ -lhaarwavelet -lopencv_core -lopencv_imgproc -lopencv_highgui
 #-lboost_serialization -lboost_filesystem -lboost_system
