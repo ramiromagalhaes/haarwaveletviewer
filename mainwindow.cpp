@@ -8,9 +8,8 @@
 #include <QImage>
 #include <QListWidgetItem>
 
-
-#include "../ecrsgen/lib/haarwavelet.h"
-#include "../ecrsgen/lib/haarwaveletutilities.h"
+#include "haarwavelet.h"
+#include "haarwaveletutilities.h"
 
 #define PIXEL_VIEW_SIZE 15
 #define WAVELET_PADDING 2
