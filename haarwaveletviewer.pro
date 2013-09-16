@@ -19,5 +19,5 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-INCLUDEPATH += "/home/ramiro/workspace/haarcommon/"
+INCLUDEPATH += /home/ramiro/workspace/haarcommon/
 LIBS += -L/home/ramiro/workspace/haarcommon-build/ -lhaarcommon -lopencv_core -lopencv_imgproc -lopencv_highgui
